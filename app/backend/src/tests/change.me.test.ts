@@ -4,42 +4,80 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Example from '../database/models/ExampleModel';
 
 import { Response } from 'superagent';
+import Team from '../database/models/Team';
+
+import { findAllTeamsMock, findTeamByIdMock } from '../mocks/mockTeam';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Seu teste', () => {
-  /**
-   * Exemplo do uso de stubs com tipos
-   */
+describe('Testes da rota /teams', () => {
+  describe('Verifica se todos os times são retornados corretamente', () => {
+    let response: Response;
 
-  // let chaiHttpResponse: Response;
+    before(async () => {
+      sinon.stub(Team, 'findAll').resolves(findAllTeamsMock as Team[]);
 
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
+      response = await chai.request(app).get('/teams');
+    });
 
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
+    after(() => {
+      sinon.restore();
+    });
 
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
+    it('retorna status 200', () => {
+      expect(response.status).to.be.equal(200);
+    });
 
-  //   expect(...)
-  // });
-
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
+    it('retorna todos os times', () => {
+      expect(response.body).to.be.deep.equal(findAllTeamsMock);
+    });
   });
+
+  describe('Verifica se um time é retornado corretamente pelo seu id', () => {
+    let response: Response;
+
+    before(async () => {
+      sinon.stub(Team, 'findByPk').resolves(findTeamByIdMock as Team);
+
+      response = await chai.request(app).get('/teams/4');
+    });
+
+    after(() => {
+      sinon.restore();
+    });
+
+    it('retorna status 200', () => {
+      expect(response.status).to.be.equal(200);
+    });
+
+    it('retorna o time de id 4', () => {
+      expect(response.body).to.be.deep.equal(findTeamByIdMock);
+    });
+  });
+
+  describe('Verifica se é retornado um erro ao buscar por um id que não existe', () => {
+    let response: Response;
+
+    before(async () => {
+      sinon.stub(Team, 'findByPk').resolves(null);
+
+      response = await chai.request(app).get('/teams/100');
+    });
+
+    after(() => {
+      sinon.restore();
+    });
+
+    // it('retorna status 404', () => {
+    //   expect(response.status).to.be.equal(404);
+    // });
+
+    // it('retorna o time de id 4', () => {
+    //   expect(response.body).to.be.deep.equal({ message: 'Team not found' });
+    // });
+  })
 });
