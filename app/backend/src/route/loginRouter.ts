@@ -1,6 +1,7 @@
 import * as express from 'express';
 import ControllerLogin from '../Controller/UserController';
 import validateLogin from '../middlewares/validationLogin';
+import authPasswordEmail from '../middlewares/authPasswordEmail';
 
 export default class RouteLogin {
   public router: express.Router;
@@ -20,6 +21,7 @@ export default class RouteLogin {
       .post(
         validateLogin.email,
         validateLogin.password,
+        authPasswordEmail.checkLoginInputs,
         ControllerLogin.successLogin,
       );
   }
