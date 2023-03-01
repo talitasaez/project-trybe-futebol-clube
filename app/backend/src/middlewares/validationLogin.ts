@@ -36,7 +36,7 @@ export default class validateLogin {
   static async verifyToken(req: Request, res: Response, next: NextFunction) {
     const { authorization } = req.headers;
 
-    if (!authorization) return res.status(404).json(tokenNotFound);
+    if (!authorization) return res.status(401).json(tokenNotFound);
 
     const token = await UserToken.verifyToken(authorization);
 
