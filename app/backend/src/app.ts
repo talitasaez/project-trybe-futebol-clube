@@ -1,5 +1,10 @@
 import * as express from 'express';
+import * as cors from 'cors';
+
+import RouteLogin from './route/loginRouter';
+// import RouteTeams from './route/teamRouter';
 import teamRouter from './route/teamRouter';
+// import RouteMatch from './routers/RouteMatch';
 
 class App {
   public app: express.Express;
@@ -13,7 +18,7 @@ class App {
     this.app.get('/', (req, res) => res.json({ ok: true }));
   }
 
-  private config():void {
+  private config(): void {
     const accessControl: express.RequestHandler = (_req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*');
       res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT,PATCH');
@@ -23,15 +28,24 @@ class App {
 
     this.app.use(express.json());
     this.app.use(accessControl);
+    this.app.use(cors());
     this.app.use(teamRouter);
+
+    const path = '/';
+
+    this.app.use(
+      path,
+      new RouteLogin().router,
+      // new RouteMatch().router,
+    );
   }
 
-  public start(PORT: string | number):void {
-    this.app.listen(PORT, () => console.log(`Running on port ${PORT}`));
+  public start(PORT: string | number): void {
+    this.app.listen(PORT, () => console.log(`Running on port ${PORT}.`));
   }
 }
 
 export { App };
 
-// Essa segunda exportação é estratégica, e a execução dos testes de cobertura depende dela
+// A execução dos testes de cobertura depende dessa exportação
 export const { app } = new App();
