@@ -10,7 +10,7 @@ export default class RouteLogin {
     this.router = express.Router();
 
     this.router
-      .route('/login/validate')
+      .route('/login/role')
       .get(
         validateLogin.verifyToken,
         ControllerLogin.roleUser,

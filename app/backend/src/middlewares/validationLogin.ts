@@ -6,7 +6,7 @@ import UserToken from '../utils/jwtAuthenticator';
 const fieldsFilled = { message: 'All fields must be filled' };
 const failEmailOrPass = { message: 'Invalid email or password' };
 const tokenNotFound = { message: 'Token not found' };
-const tokenExpiredOrInvalid = { message: 'Token Expired or Invalid' };
+const tokenExpiredOrInvalid = { message: 'Token must be a valid token' };
 
 export default class validateLogin {
   static async email(req: Request, res: Response, next: NextFunction) {
