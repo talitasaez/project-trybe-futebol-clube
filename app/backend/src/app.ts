@@ -3,6 +3,7 @@ import * as cors from 'cors';
 
 import RouteLogin from './route/loginRouter';
 import teamRouter from './route/teamRouter';
+import RouteMatch from './route/matchRouter';
 
 class App {
   public app: express.Express;
@@ -34,6 +35,7 @@ class App {
     this.app.use(
       path,
       new RouteLogin().router,
+      new RouteMatch().router,
     );
   }
 
