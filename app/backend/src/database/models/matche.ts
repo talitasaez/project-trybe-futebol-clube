@@ -1,5 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '.';
+import Team from './Team';
+import ITeam from '../../interface/ITeam';
 
 class Matches extends Model {
   declare id: number;
@@ -13,6 +15,10 @@ class Matches extends Model {
   declare awayTeamGoals: number;
 
   declare inProgress: boolean;
+
+  declare homeTeam?: Omit<ITeam, 'id'>;
+
+  declare awayTeam?: Omit<ITeam, 'id'>;
 }
 
 Matches.init({
@@ -44,5 +50,8 @@ Matches.init({
   },
 
 }, { sequelize: db, timestamps: false, modelName: 'matches', underscored: true });
+
+Matches.belongsTo(Team, { foreignKey: 'homeTeamId', as: 'homeTeam' });
+Matches.belongsTo(Team, { foreignKey: 'awayTeamId', as: 'awayTeam' });
 
 export default Matches;
