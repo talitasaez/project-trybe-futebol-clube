@@ -1,16 +1,19 @@
-import * as express from 'express';
-import ControllerMatch from '../Controller/MatchController';
+import { Router } from 'express';
+import tokenValidation from '../middlewares/tokenValidation';
+import MatchesController from '../Controller/MatchController';
 
-export default class RouteTeams {
-  public router: express.Router;
+const router = Router();
 
-  constructor() {
-    this.router = express.Router();
+const matchesController = new MatchesController();
 
-    this.router
-      .route('/matches')
-      .get(
-        ControllerMatch.getAllMatches,
-      );
-  }
-}
+router.get('/', matchesController.getAll);
+
+router.get('/:id', matchesController.getById);
+
+router.post('/', tokenValidation, matchesController.create);
+
+router.patch('/:id/finish', matchesController.finish);
+
+router.patch('/:id', matchesController.update);
+
+export default router;
