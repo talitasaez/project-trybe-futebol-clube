@@ -1,11 +1,11 @@
-// import { Request, Response } from 'express';
-// import ServiceMatch from '../service/MatchService';
+import { Request, Response } from 'express';
+import ServiceMatch from '../service/MatchService';
 
-// export default class ControllerMatch {
-//   static async getAllMatches(req: Request, res: Response) {
-//     const { inProgress } = req.query;
-//     const matches = await ServiceMatch.getAllMatches(inProgress as string);
+export default class ControllerMatch {
+  static async getAllMatches(req: Request, res: Response) {
+    const { inProgress } = req.query;
+    const matches = await ServiceMatch.getAllMatches(inProgress as string);
 
-//     return res.status(200).json(matches);
-//   }
-// }
+    return res.status(200).json(matches);
+  }
+}
