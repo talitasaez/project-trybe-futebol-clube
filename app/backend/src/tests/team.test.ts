@@ -72,12 +72,19 @@ describe('Testes da rota /teams', () => {
       sinon.restore();
     });
 
-    // it('retorna status 404', () => {
-    //   expect(response.status).to.be.equal(404);
-    // });
+    it('retorna status 401', () => {
+      expect(response.status).to.be.equal(401);
+    });
 
-    // it('retorna o time de id 4', () => {
-    //   expect(response.body).to.be.deep.equal({ message: 'Team not found' });
-    // });
-  })
+    it('retorna o time de id 4', () => {
+      expect(response.body).to.be.deep.equal({ message: 'Team not found' });
+    });
+   })
 });
+function before(arg0: () => Promise<void>) {
+  throw new Error('Function not implemented.');
+}
+
+function after(arg0: () => void) {
+  throw new Error('Function not implemented.');
+}
