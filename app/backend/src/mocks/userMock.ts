@@ -30,6 +30,6 @@ export const userLoginPassInvalidMock = {
   password: 'secret_admi',
 };
 
-export const userTokenMock = {
-  authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsImlhdCI6MTY2NDQ4MDExMX0.FTYA6cW2f31V10_UDwjCjgibS1O3_ho8_fsJfxCpa7I',
-};
+// export const userTokenMock = {
+//   authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsImlhdCI6MTY2NDQ4MDExMX0.FTYA6cW2f31V10_UDwjCjgibS1O3_ho8_fsJfxCpa7I',
+// };

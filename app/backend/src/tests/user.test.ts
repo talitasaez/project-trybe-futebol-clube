@@ -5,7 +5,7 @@ import chaiHttp = require('chai-http');
 
 import { app } from '../app';
 import ModelUser from '../database/models/User';
-import { userMock, userLoginMock, userLoginNotEmailMock, userLoginPassInvalidMock, userLoginNotPassMock, userTokenMock} from '../mocks/userMock'
+import { userMock, userLoginMock, userLoginNotEmailMock, userLoginPassInvalidMock, userLoginNotPassMock} from '../mocks/userMock'
 
 import { Response } from 'superagent';
 
@@ -93,7 +93,7 @@ describe('Teste endpoint /login/role', () => {
     it('deveria fazer requisição com sucesso', async () => {
       chaiHttpResponse = await chai.request(app)
         .get('/login/role')
-        .set(userTokenMock);
+        
 
       expect(chaiHttpResponse).to.have.status(200);
       expect(chaiHttpResponse).to.be.json;
@@ -127,3 +127,12 @@ describe('Teste endpoint /login/role', () => {
     });
   });
 });
+
+function before(arg0: () => Promise<void>) {
+  throw new Error('Function not implemented.');
+}
+
+
+function after(arg0: () => void) {
+  throw new Error('Function not implemented.');
+}
