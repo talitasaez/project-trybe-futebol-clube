@@ -3,6 +3,7 @@ import * as cors from 'cors';
 
 import RouteLogin from './route/loginRouter';
 import teamRouter from './route/teamRouter';
+import matchRouter from './route/matchRouter';
 
 class App {
   public app: express.Express;
@@ -28,6 +29,7 @@ class App {
     this.app.use(accessControl);
     this.app.use(cors());
     this.app.use(teamRouter);
+    this.app.use('/matches', matchRouter);
 
     const path = '/';
 
