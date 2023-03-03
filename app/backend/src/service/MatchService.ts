@@ -15,6 +15,14 @@ class MatchService implements IServiceMatch {
       ],
     });
   }
+
+  async idMatch(id: number) {
+    await this.model.update({ inProgress: false }, { where: { id } });
+  }
+
+  async finishIdMatch(id: number, homeTeamGoals: number, awayTeamGoals: number) {
+    await this.model.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
+  }
 }
 
 export default MatchService;
