@@ -23,6 +23,34 @@ class MatchService implements IServiceMatch {
   async finishIdMatch(id: number, homeTeamGoals: number, awayTeamGoals: number) {
     await this.model.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
   }
+
+  async create(
+    homeTeamId: number,
+    awayTeamId: number,
+    homeTeamGoals: number,
+    awayTeamGoals: number,
+  ): Promise<IMatch> {
+    const createMatch = await this.model.create(
+      { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals, inProgress: true,
+      },
+    );
+
+    const match = {
+      id: createMatch.id,
+      homeTeamId,
+      awayTeamId,
+      homeTeamGoals,
+      awayTeamGoals,
+      inProgress: true,
+    };
+
+    return match;
+  }
+
+  async getId(id: number): Promise<IMatch> {
+    const get = await this.model.findOne({ where: { id } });
+    return get as IMatch;
+  }
 }
 
 export default MatchService;
