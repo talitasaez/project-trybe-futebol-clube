@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router, Request, Response } from 'express';
 import MatchService from '../service/MatchService';
 import MatchController from '../Controller/MatchController';
 import validateLogin from '../middlewares/validationLogin';
@@ -12,7 +12,7 @@ matchRouter.get('/', (req: Request, res: Response) => matchController.findAll(re
 matchRouter.post(
   '/',
   validateLogin.verifyToken,
-  (req: Request, res: Response, next: NextFunction) => matchController.create(req, res, next),
+  (req: Request, res: Response) => matchController.create(req, res),
 );
 
 matchRouter.patch(

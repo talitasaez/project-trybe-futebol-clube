@@ -11,7 +11,7 @@ export default class MatchController {
   async findAll(req: Request, res: Response) {
     const result = await this._service.findAll();
     if (req.query.inProgress) {
-      const matches = result.filter((mat) => mat.inProgress.toString() === req.query.inProgress);
+      const matches = result.filter((e) => e.inProgress.toString() === req.query.inProgress);
       return res.status(200).json(matches);
     }
     return res.status(200).json(result);
@@ -32,9 +32,9 @@ export default class MatchController {
 
   async create(req: Request, res: Response) {
     const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = req.body;
-    const findHome = await this._service.getId(homeTeamId);
-    const findAway = await this._service.getId(awayTeamId);
-    if (findHome === findAway) {
+    const home = await this._service.getId(homeTeamId);
+    const away = await this._service.getId(awayTeamId);
+    if (home === away) {
       return res.status(404)
         .json({ message: 'There is no team with such id!' });
     }
