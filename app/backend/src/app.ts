@@ -7,12 +7,10 @@ import matchRouter from './route/matchRouter';
 
 class App {
   public app: express.Express;
-
   constructor() {
     this.app = express();
 
     this.config();
-
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
   }
