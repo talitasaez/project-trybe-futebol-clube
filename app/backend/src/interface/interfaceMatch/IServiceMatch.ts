@@ -1,14 +1,10 @@
 import IMatch from './IMatch';
+import IMatches from './IMatches';
 
 export default interface IServiceUser {
-  findAll(): Promise<IMatch[]>
+  findAll(): Promise<IMatches[]>
   idMatch(id: number): Promise<void>
   finishIdMatch(id: number, homeTeamGoals: number, awayTeamGoals: number): Promise<void>
-  create(
-    homeTeamGoals: number,
-    awayTeamGoals: number,
-    homeTeamId: number,
-    awayTeamId: number,
-  ): Promise<IMatch>;
-  getId(id: number): Promise<IMatch>;
+  create(dto: IMatch): Promise<IMatches>;
+  getId(id: number): Promise<IMatches>;
 }

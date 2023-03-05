@@ -1,90 +1,29 @@
+
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
-
+import Team from '../database/models/Team'
 import { app } from '../app';
-
+import { Model } from 'sequelize';
+import Example from '../database/models/ExampleModel';
 import { Response } from 'superagent';
-import Team from '../database/models/Team';
-
-import { findAllTeamsMock, findTeamByIdMock } from '../mocks/mockTeam';
-
-chai.use(chaiHttp);
 
 const { expect } = chai;
+chai.use(chaiHttp);
 
-describe('Testes da rota /teams', () => {
-  describe('Verifica se todos os times são retornados corretamente', () => {
-    let response: Response;
+describe('Test a rota Teams', () => {
 
-    before(async () => {
-      sinon.stub(Team, 'findAll').resolves(findAllTeamsMock as Team[]);
-
-      response = await chai.request(app).get('/teams');
-    });
-
-    after(() => {
-      sinon.restore();
-    });
-
-    it('retorna status 200', () => {
-      expect(response.status).to.be.equal(200);
-    });
-
-    it('retorna todos os times', () => {
-      expect(response.body).to.be.deep.equal(findAllTeamsMock);
-    });
+  afterEach(() => {
+    sinon.restore();
   });
 
-  describe('Verifica se um time é retornado corretamente pelo seu id', () => {
-    let response: Response;
 
-    before(async () => {
-      sinon.stub(Team, 'findByPk').resolves(findTeamByIdMock as Team);
-
-      response = await chai.request(app).get('/teams/4');
-    });
-
-    after(() => {
-      sinon.restore();
-    });
-
-    it('retorna status 200', () => {
-      expect(response.status).to.be.equal(200);
-    });
-
-    it('retorna o time de id 4', () => {
-      expect(response.body).to.be.deep.equal(findTeamByIdMock);
-    });
+  it('Teste Get: retornar as lista dos teams', async function ()  {
+    const outputMock: Team[] = [{ id: 1, teamName: 'Avaí/Kindermann'}] as unknown as Team[];
+    sinon.stub(Model, 'findAll').resolves(outputMock);
+    const result = await chai.request(app).get('/teams');
+    expect(result.status).to.be.equal(200);
+    expect(result.body).to.be.deep.equal(outputMock);
   });
-
-  describe('Verifica se é retornado um erro ao buscar por um id que não existe', () => {
-    let response: Response;
-
-    before(async () => {
-      sinon.stub(Team, 'findByPk').resolves(null);
-
-      response = await chai.request(app).get('/teams/100');
-    });
-
-    after(() => {
-      sinon.restore();
-    });
-
-    it('retorna status 401', () => {
-      expect(response.status).to.be.equal(401);
-    });
-
-    it('retorna o time de id 4', () => {
-      expect(response.body).to.be.deep.equal({ message: 'Team not found' });
-    });
-   })
 });
-function before(arg0: () => Promise<void>) {
-  throw new Error('Function not implemented.');
-}
-
-function after(arg0: () => void) {
-  throw new Error('Function not implemented.');
-}

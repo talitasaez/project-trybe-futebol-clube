@@ -34,7 +34,7 @@ export default class MatchController {
     const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = req.body;
     const findHome = await this._service.getId(homeTeamId);
     const findAway = await this._service.getId(awayTeamId);
-    if (findHome === findAway) {
+    if (!findHome === !findAway) {
       return res.status(404)
         .json({ message: 'There is no team with such id!' });
     }
@@ -43,10 +43,7 @@ export default class MatchController {
         .json({ message: 'It is not possible to create a match with two equal teams' });
     }
     const result = await this._service.create(
-      homeTeamId,
-      awayTeamId,
-      homeTeamGoals,
-      awayTeamGoals,
+      { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals },
     );
     return res.status(201).json(result);
   }
