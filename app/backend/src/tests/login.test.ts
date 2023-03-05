@@ -2,39 +2,138 @@ import * as sinon from 'sinon';
 import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
-import { App } from '../app';
+
+import { app } from '../app';
+import ModelUser from '../database/models/User';
+import { userMock, userLoginMock, userLoginNotEmailMock, userLoginPassInvalidMock, userLoginNotPassMock, userTokenInvalidMock } from '../mocks/mockLogin'
+
+import { Response } from 'superagent';
 
 chai.use(chaiHttp);
+
 const { expect } = chai;
 
-describe('Test a rota /login', () => {
+describe('Teste endpoint /login', () => {
+  describe('Login correto', () => {
+    let chaiHttpResponse: Response;
 
-  const app = new App();
-
-  it('Verifica se o login é feito de maneira correta', async () => {
-    const result = await chai.request(app.app).post('/login').send({
-      "email": "admin@admin.com",
-      "password": "secret_admin"
+    before(async () => {
+      sinon
+        .stub(ModelUser, "findOne")
+        .resolves(userMock as ModelUser);
     });
 
-    expect(result.status).to.be.equal(200);
+    after(() => {
+      (ModelUser.findOne as sinon.SinonStub).restore();
+    });
+
+    it('deveria fazer login com sucesso', async () => {
+      chaiHttpResponse = await chai.request(app)
+        .post('/login')
+        .send(userLoginMock);
+
+      expect(chaiHttpResponse).to.have.status(200);
+      expect(chaiHttpResponse).to.be.json;
+      expect(chaiHttpResponse.body).to.have.property('token');
+    });
+  })
+
+  describe('Login incorreto', () => {
+    let chaiHttpResponse: Response;
+
+    before(async () => {
+      sinon
+        .stub(ModelUser, "findOne")
+        .resolves(userMock as ModelUser);
+    });
+
+    after(() => {
+      (ModelUser.findOne as sinon.SinonStub).restore();
+    });
+
+    it('deveria falhar sem o campo email', async () => {
+      chaiHttpResponse = await chai.request(app)
+        .post('/login')
+        .send(userLoginNotEmailMock);
+
+      expect(chaiHttpResponse).to.have.status(400);
+      expect(chaiHttpResponse).to.be.json;
+      expect(chaiHttpResponse.body).to.have.property('message');
+      expect(chaiHttpResponse.body.message).to.equal('All fields must be filled')
+    });
+
+    it('deveria falhar sem o campo password', async () => {
+      chaiHttpResponse = await chai.request(app)
+        .post('/login')
+        .send(userLoginNotPassMock);
+
+      expect(chaiHttpResponse).to.have.status(400);
+      expect(chaiHttpResponse).to.be.json;
+      expect(chaiHttpResponse.body).to.have.property('message');
+      expect(chaiHttpResponse.body.message).to.equal('All fields must be filled')
+    });
+
+    it('deveria falhar com password inválido', async () => {
+      chaiHttpResponse = await chai.request(app)
+        .post('/login')
+        .send(userLoginPassInvalidMock);
+
+      expect(chaiHttpResponse).to.have.status(401);
+      expect(chaiHttpResponse).to.be.json;
+      expect(chaiHttpResponse.body).to.have.property('message');
+      expect(chaiHttpResponse.body.message).to.equal('Invalid email or password')
+    });
+  });
+});
+
+describe('Teste endpoint /login/validate', () => {
+  describe('Login com Token Válido', () => {
+    let chaiHttpResponse: Response;
+
+    it('deveria fazer requisição com sucesso', async () => {
+      chaiHttpResponse = await chai.request(app)
+        .get('/login/role')
+    
+
+      expect(chaiHttpResponse).to.have.status(200);
+      expect(chaiHttpResponse).to.be.json;
+      expect(chaiHttpResponse.body).to.have.property('role');
+      expect(chaiHttpResponse.body.role).to.equal('admin');
+    });
   });
 
-  it('Verifica se o login incorreto traz um erro', async () => {
-    const result = await chai.request(app.app).post('/login').send({
-      "email": "admin@admin.com",
+  describe('Login com Token Inválido', () => {
+    let chaiHttpResponse: Response;
+
+    it('deveria bloquear o acesso sem o token', async () => {
+      chaiHttpResponse = await chai.request(app)
+        .get('/login/role')
+        .set({});
+
+      expect(chaiHttpResponse).to.have.status(404);
+      expect(chaiHttpResponse).to.be.json;
+      expect(chaiHttpResponse.body).to.have.property('message');
+      expect(chaiHttpResponse.body.message).to.equal('Token not found');
     });
-    expect(result.status).to.be.equal(400);
-  })
 
-  it('Verifica se o login com uma senha com menos de 6 digitos retorna um erro', async () => {
-    const result = await chai.request(app.app).post('/login').send({
-      "email": "admin@admin.com",
-      "password": "123"
+    it('deveria bloquear o acesso com token inválido', async () => {
+      chaiHttpResponse = await chai.request(app)
+        .get('/login/role')
+        .set(userTokenInvalidMock);
+
+      expect(chaiHttpResponse).to.have.status(401);
+      expect(chaiHttpResponse).to.be.json;
+      expect(chaiHttpResponse.body).to.have.property('message');
+      expect(chaiHttpResponse.body.message).to.equal('Token Expired or Invalid');
     });
-
-
-    expect(result.status).to.be.equal(401);
-    expect(result.body).to.be.deep.equal({ message: 'Invalid email or password'});
-  })
+  });
 });
+
+function before(arg0: () => Promise<void>) {
+  throw new Error('Function not implemented.');
+}
+
+
+function after(arg0: () => void) {
+  throw new Error('Function not implemented.');
+}
