@@ -7,23 +7,24 @@ const matchRouter = Router();
 const matchService = new MatchService();
 const matchController = new MatchController(matchService);
 
-matchRouter.get('/', (req: Request, res: Response) => matchController.findAll(req, res));
+matchRouter.get('/', (req: Request, res: Response) => matchController.getAll(req, res));
 
-matchRouter.post(
-  '/',
+matchRouter.patch(
+  '/:id/finish',
   validateLogin.verifyToken,
-  (req: Request, res: Response) => matchController.create(req, res),
+  (req: Request, res: Response) => matchController.finishId(req, res),
 );
 
 matchRouter.patch(
   '/:id',
   validateLogin.verifyToken,
-  (req: Request, res: Response) => matchController.finishIdMatch(req, res),
+  (req: Request, res: Response) => matchController.update(req, res),
 );
-matchRouter.patch(
-  '/:id/finish',
+
+matchRouter.post(
+  '/',
   validateLogin.verifyToken,
-  (req: Request, res: Response) => matchController.idMatch(req, res),
+  (req: Request, res: Response) => matchController.create(req, res),
 );
 
 export default matchRouter;
