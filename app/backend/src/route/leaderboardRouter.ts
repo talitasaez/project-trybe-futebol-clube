@@ -8,8 +8,6 @@ const leaderboardController = new LeaderboardController(leaderboardService);
 
 leaderboardRoutes
   .get('/leaderboard/home', (req: Request, res: Response) =>
-    leaderboardController.homeTeam(req, res))
-  .get('/leaderboard/away', (req: Request, res: Response) =>
-    leaderboardController.awayTeam(req, res));
+    leaderboardController.homeTeam(req, res));
 
 export default leaderboardRoutes;
