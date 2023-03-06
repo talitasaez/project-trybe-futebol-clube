@@ -4,6 +4,7 @@ import * as cors from 'cors';
 import RouteLogin from './route/loginRouter';
 import teamRouter from './route/teamRouter';
 import matchRouter from './route/matchRouter';
+import leaderboardRoutes from './route/leaderboardRouter';
 
 class App {
   public app: express.Express;
@@ -28,6 +29,7 @@ class App {
     this.app.use(cors());
     this.app.use(teamRouter);
     this.app.use('/matches', matchRouter);
+    this.app.use(leaderboardRoutes);
 
     const path = '/';
 

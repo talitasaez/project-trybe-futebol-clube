@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import IServiceMatches from '../interface/interfaceMatch/IServiceMatch';
+import IServiceMatches from '../interface/IServiceMatches';
 
 class MatchesController {
   private _service: IServiceMatches;

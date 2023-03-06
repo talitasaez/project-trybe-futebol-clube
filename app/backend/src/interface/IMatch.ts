@@ -1,7 +1,6 @@
-export default interface IMatch {
+export default interface IHome {
   homeTeamId: number;
   awayTeamId: number;
   awayTeamGoals: number;
   homeTeamGoals: number;
-  wins?: number;
 }

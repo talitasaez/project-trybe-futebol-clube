@@ -1,9 +1,9 @@
 import { ModelStatic } from 'sequelize';
 import Team from '../database/models/Team';
-import IServicesMatches from '../interface/interfaceMatch/IServiceMatch';
+import IServicesMatches from '../interface/IServiceMatches';
 import Matches from '../database/models/matche';
-import IMatches from '../interface/interfaceMatch/IMatches';
-import IMatch from '../interface/interfaceMatch/IMatch';
+import IMatches from '../interface/IMatches';
+import IMatch from '../interface/IMatch';
 
 export default class MatchesService implements IServicesMatches {
   protected model: ModelStatic<Matches> = Matches;
@@ -27,6 +27,7 @@ export default class MatchesService implements IServicesMatches {
 
   async create(dto: IMatch): Promise<IMatches> {
     const match = await this.model.create({ ...dto, inProgress: true });
+
     return match;
   }
 
